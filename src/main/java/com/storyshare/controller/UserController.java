@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.UUID;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -27,6 +29,11 @@ public class UserController {
     @PostMapping("/login")
     public JwtResponse login(@RequestBody @Valid UserLoginRequest request) {
         return userService.login(request);
+    }
+
+    @GetMapping("/{id}")
+    public UserResponse getUser(@PathVariable UUID id){
+        return userService.getUser(id);
     }
 
     @PutMapping("/update")
