@@ -21,6 +21,7 @@ public class ReviewEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
     String comment;
+    Boolean parentReview;
     Integer likeCount;
     Integer dislikeCount;
     Integer replyCount;
