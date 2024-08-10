@@ -3,6 +3,7 @@ package com.storyshare.service;
 import com.amazonaws.services.cloudformation.model.AlreadyExistsException;
 import com.storyshare.dto.request.UserLoginRequest;
 import com.storyshare.dto.request.UserRegisterRequest;
+import com.storyshare.dto.request.UserUpdateRequest;
 import com.storyshare.dto.response.JwtResponse;
 import com.storyshare.dto.response.UserResponse;
 import com.storyshare.entity.RoleEntity;
@@ -16,9 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -26,10 +30,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserService {
+    private final JwtService jwtService;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    private final AmazonS3Service amazonS3Service;
     private final AuthenticationManager authenticationManager;
 
     public UserResponse register(UserRegisterRequest request){
@@ -52,7 +57,7 @@ public class UserService {
 
     public JwtResponse login(UserLoginRequest request){
         log.info("ActionLog.login.start for username {}", request.getUsername());
-        UserEntity entity = userRepository.findByUsername(request.getUsername()).orElseThrow(()-> {
+        userRepository.findByUsername(request.getUsername()).orElseThrow(()-> {
             log.error("ActionLog.login.user.NotFoundException for username {}", request.getUsername());
             return new NotFoundException("USER_NOT_FOUND");
         });
@@ -62,6 +67,28 @@ public class UserService {
         String accessToken = jwtService.generateAccessToken(principal);
         log.info("ActionLog.login.end for username {}", request.getUsername());
         return new JwtResponse(request.getUsername(), accessToken);
+    }
+
+    public UserResponse update(UserUpdateRequest request, MultipartFile image){
+        log.info("ActionLog.update.start for username {}", request.getUsername());
+        UserEntity entity = userRepository.findByUsername(getCurrentUsername()).orElseThrow(()->{
+            log.error("ActionLog.update.user.NotFoundException for username {}", request.getUsername());
+            return new NotFoundException("USER_NOT_FOUND");
+        });
+        entity.setPhotoUrl(amazonS3Service.uploadFile(image));
+        UserMapper.INSTANCE.mapRequestToEntity(entity, request);
+        UserResponse response = UserMapper.INSTANCE.entityToResponse(entity);
+        log.info("ActionLog.update.end for username {}", entity.getUsername());
+        return response;
+    }
+
+    public String getCurrentUsername(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername();
+        } else {
+            return principal.toString();
+        }
     }
 
     private RoleEntity getRole() {
