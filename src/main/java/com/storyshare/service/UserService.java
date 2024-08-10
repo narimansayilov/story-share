@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -69,6 +70,14 @@ public class UserService {
         return new JwtResponse(request.getUsername(), accessToken);
     }
 
+    public UserResponse getUser(UUID id){
+        UserEntity entity = userRepository.findById(id).orElseThrow(()->{
+            log.error("ActionLog.update.user.NotFoundException for id = {}", id);
+            return new NotFoundException("USER_NOT_FOUND");
+        });
+        return UserMapper.INSTANCE.entityToResponse(entity);
+    }
+
     public UserResponse update(UserUpdateRequest request, MultipartFile image){
         log.info("ActionLog.update.start for username {}", request.getUsername());
         UserEntity entity = userRepository.findByUsername(getCurrentUsername()).orElseThrow(()->{
@@ -77,6 +86,7 @@ public class UserService {
         });
         entity.setPhotoUrl(amazonS3Service.uploadFile(image));
         UserMapper.INSTANCE.mapRequestToEntity(entity, request);
+        userRepository.save(entity);
         UserResponse response = UserMapper.INSTANCE.entityToResponse(entity);
         log.info("ActionLog.update.end for username {}", entity.getUsername());
         return response;
