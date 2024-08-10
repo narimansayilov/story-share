@@ -31,6 +31,11 @@ public class UserController {
         return userService.login(request);
     }
 
+    @GetMapping("/{id}")
+    public UserResponse getUser(@PathVariable UUID id){
+        return userService.getUser(id);
+    }
+
     @PutMapping("/update")
     public UserResponse update(@RequestPart("request") @Valid UserUpdateRequest request,
                                @RequestPart("image") MultipartFile image) {
