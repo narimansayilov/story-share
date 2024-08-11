@@ -39,57 +39,39 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
 
     public UserResponse register(UserRegisterRequest request){
-        log.info("ActionLog.register.start for username {}", request.getUsername());
         userRepository.findByUsername(request.getUsername()).ifPresent(user -> {
-            log.error("ActionLog.register.username.AlreadyExistsException for username {}", user.getUsername());
-            throw new AlreadyExistsException("USERNAME_ALREADY_EXISTS");
+            throw  new AlreadyExistsException("USERNAME_ALREADY_EXISTS");
         });
         userRepository.findByEmail(request.getEmail()).ifPresent(user -> {
-            log.error("ActionLog.register.email.AlreadyExistsException for username {}", user.getUsername());
             throw  new AlreadyExistsException("EMAIL_ALREADY_EXISTS");
         });
         UserEntity entity = UserMapper.INSTANCE.registerRequestToEntity(request);
         entity.setPassword(passwordEncoder.encode(request.getPassword()));
         entity.setRoles(List.of(getRole()));
         userRepository.save(entity);
-        log.info("ActionLog.register.end for username {}", entity.getUsername());
         return UserMapper.INSTANCE.entityToResponse(entity);
     }
 
     public JwtResponse login(UserLoginRequest request){
-        log.info("ActionLog.login.start for username {}", request.getUsername());
-        userRepository.findByUsername(request.getUsername()).orElseThrow(()-> {
-            log.error("ActionLog.login.user.NotFoundException for username {}", request.getUsername());
-            return new NotFoundException("USER_NOT_FOUND");
-        });
+        userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         User principal = (User) authentication.getPrincipal();
         String accessToken = jwtService.generateAccessToken(principal);
-        log.info("ActionLog.login.end for username {}", request.getUsername());
         return new JwtResponse(request.getUsername(), accessToken);
     }
 
     public UserResponse getUser(UUID id){
-        UserEntity entity = userRepository.findById(id).orElseThrow(()->{
-            log.error("ActionLog.update.user.NotFoundException for id = {}", id);
-            return new NotFoundException("USER_NOT_FOUND");
-        });
+        UserEntity entity = userRepository.findById(id).orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));
         return UserMapper.INSTANCE.entityToResponse(entity);
     }
 
     public UserResponse update(UserUpdateRequest request, MultipartFile image){
-        log.info("ActionLog.update.start for username {}", request.getUsername());
-        UserEntity entity = userRepository.findByUsername(getCurrentUsername()).orElseThrow(()->{
-            log.error("ActionLog.update.user.NotFoundException for username {}", request.getUsername());
-            return new NotFoundException("USER_NOT_FOUND");
-        });
+        UserEntity entity = userRepository.findByUsername(getCurrentUsername()).orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));
         entity.setPhotoUrl(amazonS3Service.uploadFile(image));
         UserMapper.INSTANCE.mapRequestToEntity(entity, request);
         userRepository.save(entity);
-        UserResponse response = UserMapper.INSTANCE.entityToResponse(entity);
-        log.info("ActionLog.update.end for username {}", entity.getUsername());
-        return response;
+        return UserMapper.INSTANCE.entityToResponse(entity);
     }
 
     public String getCurrentUsername(){

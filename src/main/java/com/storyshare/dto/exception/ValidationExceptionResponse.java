@@ -1,4 +1,4 @@
-package com.storyshare.dto.response;
+package com.storyshare.dto.exception;
 
 import lombok.Builder;
 import lombok.Getter;
