@@ -12,8 +12,4 @@ public class StoryShareApplication {
         SpringApplication.run(StoryShareApplication.class, args);
 
     }
-
-
-
-
 }
