@@ -1,9 +1,9 @@
 package com.storyshare.controller;
 
 import com.amazonaws.services.cloudformation.model.AlreadyExistsException;
-import com.storyshare.dto.response.ExceptionResponse;
-import com.storyshare.dto.response.FieldErrorResponse;
-import com.storyshare.dto.response.ValidationExceptionResponse;
+import com.storyshare.dto.exception.ExceptionResponse;
+import com.storyshare.dto.exception.FieldErrorResponse;
+import com.storyshare.dto.exception.ValidationExceptionResponse;
 import com.storyshare.exception.FileUploadException;
 import com.storyshare.exception.NotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
