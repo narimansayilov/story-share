@@ -25,6 +25,7 @@ public class ReviewEntity {
     Integer likeCount;
     Integer dislikeCount;
     Integer replyCount;
+    Boolean status;
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
@@ -43,4 +44,12 @@ public class ReviewEntity {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void autoFill() {
+        this.status = true;
+        this.likeCount = 0;
+        this.dislikeCount = 0;
+        this.replyCount = 0;
+    }
 }

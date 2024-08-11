@@ -56,5 +56,10 @@ public class StoryEntity {
     @PrePersist
     protected void autoFill() {
         this.status = true;
+        this.viewCount = 0;
+        this.likeCount = 0;
+        this.dislikeCount = 0;
+        this.commentCount = 0;
+        this.favoriteCount = 0;
     }
 }

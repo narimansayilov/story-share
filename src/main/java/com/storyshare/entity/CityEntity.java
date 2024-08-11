@@ -33,4 +33,9 @@ public class CityEntity {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void autoFill() {
+        this.storyCount = 0;
+    }
 }
