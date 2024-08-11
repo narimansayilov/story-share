@@ -10,7 +10,10 @@ public class StoryShareApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(StoryShareApplication.class, args);
+
     }
+
+
 
 
 }
