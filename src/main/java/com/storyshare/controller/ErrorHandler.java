@@ -4,6 +4,7 @@ import com.amazonaws.services.cloudformation.model.AlreadyExistsException;
 import com.storyshare.dto.exception.ExceptionResponse;
 import com.storyshare.dto.exception.FieldErrorResponse;
 import com.storyshare.dto.exception.ValidationExceptionResponse;
+import com.storyshare.exception.DeletionException;
 import com.storyshare.exception.FileUploadException;
 import com.storyshare.exception.NotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,6 +33,12 @@ public class ErrorHandler {
     @ResponseStatus(BAD_REQUEST)
     public ExceptionResponse handleFileUploadException(FileUploadException exception){
         return buildExceptionResponse(exception.getMessage(), BAD_REQUEST.value(), "FILE_UPLOAD_ERROR");
+    }
+
+    @ExceptionHandler(DeletionException.class)
+    @ResponseStatus(CONFLICT)
+    public ExceptionResponse handleDeletionException(DeletionException exception){
+        return buildExceptionResponse(exception.getMessage(), CONFLICT.value(), "DELETION_ERROR");
     }
 
     @ExceptionHandler(AlreadyExistsException.class)
