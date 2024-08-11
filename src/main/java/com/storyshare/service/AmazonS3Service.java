@@ -25,13 +25,11 @@ public class AmazonS3Service {
     private String bucketName;
 
     public String uploadFile(MultipartFile file) {
-        log.info("ActionLog.uploadFile.start for filename is {}", file.getOriginalFilename());
         File fileObj = convertMultiPartFileToFile(file);
         String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
         amazonS3.putObject(new PutObjectRequest(bucketName, fileName, fileObj)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
         boolean delete = fileObj.delete();
-        log.info("ActionLog.uploadFile.end for filename is {}", file.getOriginalFilename());
         return amazonS3.getUrl(bucketName, fileName).toString();
     }
 
