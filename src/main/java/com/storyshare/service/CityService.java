@@ -22,7 +22,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CItyService {
+public class CityService {
     private final CityRepository cityRepository;
 
     public void addCity(CityRequest request){
