@@ -1,2 +1,5 @@
-package com.storyshare.util;public class Test {
+package com.storyshare.util;
+
+public class Test {
+    // Test
 }
