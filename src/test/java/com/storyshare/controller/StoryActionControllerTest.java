@@ -1,61 +1,78 @@
 package com.storyshare.controller;
 
 import com.storyshare.dto.response.StoryActionResponse;
+import com.storyshare.enums.StoryActionType;
 import com.storyshare.service.StoryActionService;
+import com.storyshare.dto.response.StoryResponse;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
 class StoryActionControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @InjectMocks
+    private StoryActionController storyActionController;
 
-    @MockBean
+    @Mock
     private StoryActionService storyActionService;
 
+    public StoryActionControllerTest() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     @Test
-    void testGetStoryActionByType() throws Exception {
+    void testGetStoryActionByType() {
         String type = "LIKE";
         StoryActionResponse response = new StoryActionResponse();
-        Mockito.when(storyActionService.getStoryActionByType(type)).thenReturn(List.of(response));
+        response.setType(StoryActionType.valueOf(type));
+        response.setStory(new StoryResponse());
+        response.setCreatedAt(LocalDateTime.now());
+        response.setId(UUID.randomUUID());
 
-        mockMvc.perform(get("/storyActions/{type}", type))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(1));
+        when(storyActionService.getStoryActionByType(type)).thenReturn(List.of(response));
+
+        ResponseEntity<List<StoryActionResponse>> responseEntity = storyActionController.getStoryActionByType(type);
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(1, responseEntity.getBody().size());
+        StoryActionResponse actualResponse = responseEntity.getBody().get(0);
+        assertEquals(type, actualResponse.getType().name());
+        assertNotNull(actualResponse.getStory()); // Assuming StoryResponse has a non-null field
     }
 
     @Test
-    void testCreateStoryByType() throws Exception {
+    void testCreateStoryByType() {
         UUID storyId = UUID.randomUUID();
         String type = "LIKE";
-        Mockito.when(storyActionService.createStoryByType(storyId, type)).thenReturn(storyId);
+        UUID storyActionId = UUID.randomUUID();
 
-        mockMvc.perform(post("/storyActions/{storyId}/{type}", storyId, type))
-                .andExpect(status().isOk())
-                .andExpect(content().string(storyId.toString()));
+        when(storyActionService.createStoryByType(storyId, type)).thenReturn(storyActionId);
+
+        ResponseEntity<UUID> responseEntity = storyActionController.createStoryByType(storyId, type);
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals(storyActionId, responseEntity.getBody());
     }
 
     @Test
-    void testDeleteStoryAction() throws Exception {
+    void testDeleteStoryAction() {
         UUID storyActionId = UUID.randomUUID();
 
-        mockMvc.perform(delete("/storyActions/{id}", storyActionId))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Deleted story action"));
+        doNothing().when(storyActionService).deleteStoryActionById(storyActionId);
+
+        ResponseEntity<String> responseEntity = storyActionController.deleteStoryAction(storyActionId);
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        assertEquals("Deleted story action", responseEntity.getBody());
     }
-
 }
-
