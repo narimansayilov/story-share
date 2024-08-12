@@ -24,6 +24,7 @@ public class SecurityConfig {
             "users/{id}",
             "tags/**",
             "cities/**",
+            "review/**",
             "/webjars/**",
             "/v2/api3-docs",
             "/v3/api-docs/**",
