@@ -51,10 +51,10 @@ public class StoryActionService {
             throw new IllegalArgumentException("Invalid story action type");
         }
         StoryEntity story = storyRepository.findById(storyId)
-                .orElseThrow(() -> new RuntimeException("Story not found"));
+                .orElseThrow(() -> new NotFoundException("Story not found"));
         String currentUsername = userService.getCurrentUsername();
         UserEntity user = userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new NotFoundException("User not found"));
         StoryActionEntity action = createStoryAction(story, user, actionType);
         return action.getId();
     }
