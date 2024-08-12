@@ -4,9 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -23,10 +26,15 @@ public class CityEntity {
     String name;
     Boolean parentCity;
     Integer storyCount;
+    Integer subCityCount;
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
     CityEntity parent;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    List<Translation> translations;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -37,5 +45,6 @@ public class CityEntity {
     @PrePersist
     protected void autoFill() {
         this.storyCount = 0;
+        this.subCityCount = 0;
     }
 }

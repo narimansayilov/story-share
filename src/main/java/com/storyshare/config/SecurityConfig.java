@@ -23,6 +23,7 @@ public class SecurityConfig {
             "users/login",
             "users/{id}",
             "tags/**",
+            "cities/**",
             "/webjars/**",
             "/v2/api3-docs",
             "/v3/api-docs/**",
