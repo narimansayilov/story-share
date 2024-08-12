@@ -34,6 +34,13 @@ public class StoryImageService {
         }
     }
 
+    public void editImages(List<MultipartFile> images, UUID storyId) {
+        List<StoryImageEntity> imageEntities = imageRepository.findByStoryIdAndStatus(storyId, true);
+        imageEntities.forEach(entity -> entity.setStatus(false));
+        imageRepository.saveAll(imageEntities);
+        addImages(images, storyId);
+    }
+
     public List<StoryImageResponse> getImages(UUID storyId) {
         List<StoryImageEntity> entities = imageRepository.findByStoryIdAndStatus(storyId, true);
         return StoryImageMapper.INSTANCE.entitiesToResponses(entities);

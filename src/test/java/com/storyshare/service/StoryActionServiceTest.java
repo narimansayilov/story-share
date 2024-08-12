@@ -14,14 +14,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 class StoryActionServiceTest {
@@ -67,12 +69,6 @@ class StoryActionServiceTest {
         Mockito.when(userService.getCurrentUsername()).thenReturn("testUser");
         Mockito.when(userRepository.findByUsername("testUser")).thenReturn(Optional.of(user));
 
-        Mockito.when(storyActionRepository.save(Mockito.any(StoryActionEntity.class)))
-                .thenAnswer(invocation -> {
-                    StoryActionEntity savedEntity = invocation.getArgument(0);
-                    savedEntity.setId(UUID.randomUUID()); // Yeni UUID təyin edilir
-                    return savedEntity;
-                });
 
         UUID actionId = storyActionService.createStoryByType(storyId, type.name());
 
