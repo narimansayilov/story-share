@@ -50,6 +50,5 @@ public class ReviewEntity {
         this.status = true;
         this.likeCount = 0;
         this.dislikeCount = 0;
-        this.replyCount = 0;
     }
 }
