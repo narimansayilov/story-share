@@ -5,14 +5,11 @@ import com.storyshare.dto.response.ReviewResponse;
 import com.storyshare.dto.response.StoryResponse;
 import com.storyshare.dto.response.UserResponse;
 import com.storyshare.entity.ReviewEntity;
-import com.storyshare.entity.UserEntity;
 import com.storyshare.exception.NotFoundException;
 import com.storyshare.mapper.ReviewMapper;
 import com.storyshare.mapper.StoryMapper;
 import com.storyshare.mapper.UserMapper;
 import com.storyshare.repository.ReviewRepository;
-import com.storyshare.repository.StoryRepository;
-import com.storyshare.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -58,5 +55,12 @@ public class ReviewService {
         return reviewRepository.findByParentId(id).stream()
                 .map(ReviewMapper.INSTANCE::mapEntityToResponse)
                 .toList();
+    }
+
+    public void deleteReviewById(UUID id) {
+        ReviewEntity entity = reviewRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("REVIEW NOT FOUND WITH ID: " + id));
+        entity.setStatus(false);
+        reviewRepository.save(entity);
     }
 }
