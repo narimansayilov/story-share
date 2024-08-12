@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public interface StoryMapper {
 
     StoryResponse entityToResponse(StoryEntity entity, List<StoryImageResponse> images);
 
-    List<StoryResponse> entitiesToResponses(List<StoryEntity> entities);
+    List<StoryResponse> entitiesToResponses(Page<StoryEntity> entities);
 
     void mapRequestToEntity(@MappingTarget StoryEntity storyEntity, StoryRequest request);
 }
