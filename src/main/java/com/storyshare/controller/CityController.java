@@ -3,7 +3,7 @@ package com.storyshare.controller;
 import com.storyshare.dto.criteria.CityCriteriaRequest;
 import com.storyshare.dto.request.CityRequest;
 import com.storyshare.dto.response.CityResponse;
-import com.storyshare.service.CItyService;
+import com.storyshare.service.CityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/cities")
 public class CityController {
-    private final CItyService cityService;
+    private final CityService cityService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
