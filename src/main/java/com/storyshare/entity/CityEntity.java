@@ -46,5 +46,7 @@ public class CityEntity {
     protected void autoFill() {
         this.storyCount = 0;
         this.subCityCount = 0;
+        this.parent = this.parent.getId() == null ? null : this.parent;
+        this.createdAt = LocalDateTime.now();
     }
 }
