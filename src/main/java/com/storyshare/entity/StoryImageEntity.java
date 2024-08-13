@@ -29,10 +29,10 @@ public class StoryImageEntity {
     StoryEntity story;
 
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    LocalDateTime updatedAt;
 
     @PrePersist
     protected void autoFill() {

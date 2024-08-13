@@ -39,13 +39,13 @@ public class UserEntity {
     List<RoleEntity> roles;
 
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    LocalDateTime updatedAt;
 
     @PrePersist
-    public void autoFill(){
+    protected void autoFill(){
         this.status = true;
         this.storyCount = 0;
     }

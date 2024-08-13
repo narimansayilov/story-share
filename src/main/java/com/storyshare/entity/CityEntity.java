@@ -37,10 +37,10 @@ public class CityEntity {
     List<Translation> translations;
 
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    LocalDateTime updatedAt;
 
     @PrePersist
     protected void autoFill() {

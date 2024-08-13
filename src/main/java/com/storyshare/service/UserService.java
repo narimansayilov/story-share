@@ -66,6 +66,13 @@ public class UserService {
         return UserMapper.INSTANCE.entityToResponse(entity);
     }
 
+    public UserResponse getUserDetails(){
+        String username = getCurrentUsername();
+        UserEntity entity = userRepository.findByUsername(username).orElseThrow(() ->
+                new NotFoundException("USER_NOT_FOUND"));
+        return UserMapper.INSTANCE.entityToResponse(entity);
+    }
+
     public UserResponse update(UserUpdateRequest request, MultipartFile image){
         UserEntity entity = userRepository.findByUsername(getCurrentUsername()).orElseThrow(() -> new NotFoundException("USER_NOT_FOUND"));
         entity.setPhotoUrl(amazonS3Service.uploadFile(image));

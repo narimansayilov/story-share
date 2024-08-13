@@ -3,6 +3,7 @@ package com.storyshare.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -22,8 +23,6 @@ public class SecurityConfig {
             "users/register",
             "users/login",
             "users/{id}",
-            "tags/**",
-            "cities/**",
             "review/**",
             "/webjars/**",
             "/v2/api3-docs",
@@ -45,6 +44,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(AUTH_WHITELIST).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/tags/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/cities/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/stories/**").permitAll()
+//                        .requestMatchers("/tags/**").hasRole("ADMIN")
+//                        .requestMatchers("/cities/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
