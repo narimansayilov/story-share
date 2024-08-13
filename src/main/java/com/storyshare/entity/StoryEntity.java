@@ -47,10 +47,10 @@ public class StoryEntity {
     Set<TagEntity> tags;
 
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    LocalDateTime updatedAt;
 
     @PrePersist
     protected void autoFill() {
