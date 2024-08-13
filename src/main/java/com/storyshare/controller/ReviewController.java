@@ -3,12 +3,9 @@ package com.storyshare.controller;
 
 import com.storyshare.dto.request.ReviewRequest;
 import com.storyshare.dto.response.ReviewResponse;
-import com.storyshare.entity.ReviewEntity;
-import com.storyshare.exception.NotFoundException;
+import com.storyshare.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import com.storyshare.service.ReviewService;
 
 import java.util.List;
 import java.util.UUID;
