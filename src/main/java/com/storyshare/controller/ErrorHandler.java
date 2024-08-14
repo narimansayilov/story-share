@@ -4,9 +4,7 @@ import com.amazonaws.services.cloudformation.model.AlreadyExistsException;
 import com.storyshare.dto.exception.ExceptionResponse;
 import com.storyshare.dto.exception.FieldErrorResponse;
 import com.storyshare.dto.exception.ValidationExceptionResponse;
-import com.storyshare.exception.DeletionException;
-import com.storyshare.exception.FileUploadException;
-import com.storyshare.exception.NotFoundException;
+import com.storyshare.exception.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -35,6 +33,18 @@ public class ErrorHandler {
         return buildExceptionResponse(exception.getMessage(), BAD_REQUEST.value(), "FILE_UPLOAD_ERROR");
     }
 
+    @ExceptionHandler(ActiveException.class)
+    @ResponseStatus(CONFLICT)
+    public ExceptionResponse handleActiveException(ActiveException exception) {
+        return buildExceptionResponse(exception.getMessage(), CONFLICT.value(), "ACTIVE_CONFLICT");
+    }
+
+    @ExceptionHandler(NotActiveException.class)
+    @ResponseStatus(CONFLICT)
+    public ExceptionResponse handleNotActiveException(NotActiveException exception) {
+        return buildExceptionResponse(exception.getMessage(), CONFLICT.value(), "NOT_ACTIVE_CONFLICT");
+    }
+
     @ExceptionHandler(DeletionException.class)
     @ResponseStatus(CONFLICT)
     public ExceptionResponse handleDeletionException(DeletionException exception){
@@ -45,6 +55,12 @@ public class ErrorHandler {
     @ResponseStatus(CONFLICT)
     public ExceptionResponse handleAlreadyExistsException(AlreadyExistsException exception) {
         return buildExceptionResponse(exception.getMessage(), CONFLICT.value(), "ALREADY_EXISTS");
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    @ResponseStatus(UNAUTHORIZED)
+    public ExceptionResponse handleUnauthorizedAccessException(UnauthorizedAccessException exception) {
+        return buildExceptionResponse(exception.getMessage(), UNAUTHORIZED.value(), "UNAUTHORIZED_ACCESS");
     }
 
     @ExceptionHandler(Exception.class)
