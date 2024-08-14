@@ -22,5 +22,5 @@ public class ReviewResponse {
     Integer dislikeCount;
     Integer replyCount;
     UserResponse user;
-    StoryResponse story;
+    UUID storyId;
 }

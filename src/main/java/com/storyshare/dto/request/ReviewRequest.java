@@ -21,8 +21,5 @@ public class ReviewRequest {
     UUID parentId;
 
     @NotBlank
-    UUID userId;
-
-    @NotBlank
     UUID storyId;
 }
