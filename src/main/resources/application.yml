@@ -5,3 +5,4 @@ spring:
       - security
       - s3
       - file-upload
+      - liquibase
