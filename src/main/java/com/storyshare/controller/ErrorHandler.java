@@ -1,6 +1,6 @@
 package com.storyshare.controller;
 
-import com.amazonaws.services.cloudformation.model.AlreadyExistsException;
+import com.storyshare.exception.AlreadyExistsException;
 import com.storyshare.dto.exception.ExceptionResponse;
 import com.storyshare.dto.exception.FieldErrorResponse;
 import com.storyshare.dto.exception.ValidationExceptionResponse;
