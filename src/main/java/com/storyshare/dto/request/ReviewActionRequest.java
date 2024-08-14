@@ -1,6 +1,6 @@
 package com.storyshare.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
+import com.storyshare.enums.ReviewActionType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,15 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ReviewRequest {
-    @NotBlank
-    String comment;
-
-    @NotBlank
-    Boolean parentReview;
-
-    UUID parentId;
-
-    @NotBlank
-    UUID storyId;
+public class ReviewActionRequest {
+    ReviewActionType type;
+    UUID reviewId;
 }

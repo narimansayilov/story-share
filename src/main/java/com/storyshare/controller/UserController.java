@@ -31,6 +31,11 @@ public class UserController {
         return userService.login(request);
     }
 
+    @GetMapping("/my")
+    public UserResponse getMyProfile(){
+        return userService.getUserDetails();
+    }
+
     @GetMapping("/{id}")
     public UserResponse getUser(@PathVariable UUID id){
         return userService.getUser(id);

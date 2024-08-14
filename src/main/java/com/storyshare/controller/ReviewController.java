@@ -3,16 +3,10 @@ package com.storyshare.controller;
 
 import com.storyshare.dto.request.ReviewRequest;
 import com.storyshare.dto.response.ReviewResponse;
-import com.storyshare.entity.ReviewEntity;
-import com.storyshare.entity.StoryEntity;
-import com.storyshare.entity.UserEntity;
-import com.storyshare.exception.NotFoundException;
-import com.storyshare.mapper.ReviewMapper;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
 import com.storyshare.service.ReviewService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,13 +23,28 @@ public class ReviewController {
         reviewService.addReview(request);
     }
 
+    @GetMapping("/all")
+    public List<ReviewResponse> getAllReview(Pageable pageable){
+        return reviewService.getAllReview(pageable);
+    }
+
+    @GetMapping("/story/{storyId}")
+    public List<ReviewResponse> getAllReviewByStoryId(Pageable pageable, @PathVariable UUID storyId){
+        return reviewService.getAllReviewByStoryId(pageable, storyId);
+    }
+
     @GetMapping("/{id}")
     public ReviewResponse getReviewById(@PathVariable UUID id){
         return reviewService.getReviewById(id);
     }
 
-    @GetMapping("/replay/{id}")
+    @GetMapping("/reply/{id}")
     public List<ReviewResponse> getReviewReplayById(@PathVariable UUID id) {
-        return reviewService.getReviewReplayById(id);
+        return reviewService.getReviewReplyById(id);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteReviewById(@PathVariable UUID id) {
+        reviewService.deleteReviewById(id);
     }
 }    

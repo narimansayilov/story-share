@@ -1,10 +1,9 @@
 package com.storyshare.dto.response;
 
 import com.storyshare.entity.ReviewEntity;
-import com.storyshare.entity.StoryEntity;
 import com.storyshare.entity.UserEntity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import com.storyshare.enums.ReviewActionType;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,12 +14,12 @@ import java.util.UUID;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ReviewResponse {
+public class ReviewActionResponse {
     UUID id;
-    String comment;
-    Integer likeCount;
-    Integer dislikeCount;
-    Integer replyCount;
-    UserResponse user;
-    UUID storyId;
+
+    ReviewActionType type;
+
+    UUID reviewId;
+
+    UUID userId;
 }
