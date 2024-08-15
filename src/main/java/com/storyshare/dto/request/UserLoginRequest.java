@@ -14,7 +14,6 @@ public class UserLoginRequest {
     @NotBlank(message = "Username cannot be blank")
     private String username;
 
-
     @Size(min = 8, max = 64, message = "Password must be at least 8 characters long")
     @Pattern(
             regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=?!.,]).{8,}$",
