@@ -1,0 +1,85 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-stories-table
+      author: Alimardan Alimardanov
+      changes:
+        - createTable:
+            tableName: stories
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: title
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+                  constraints:
+                    nullable: true
+              - column:
+                  name: view_count
+                  type: int
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: like_count
+                  type: int
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: dislike_count
+                  type: int
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comment_count
+                  type: int
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: favorite_count
+                  type: int
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    references: users(id)
+                    foreignKeyName: fk_stories_users
+              - column:
+                  name: city_id
+                  type: uuid
+                  constraints:
+                    nullable: true
+                    references: cities(id)
+                    foreignKeyName: fk_stories_cities
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false

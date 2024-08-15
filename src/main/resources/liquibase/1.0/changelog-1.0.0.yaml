@@ -1,23 +1,22 @@
 databaseChangeLog:
   - changeSet:
-      id: 20240814_1.0.0
-      author: alimardan
+      id: create-users-table
+      author: Alimardan Alimardanov
       changes:
         - createTable:
             tableName: users
-            schemaName: liquibase
             columns:
               - column:
                   name: id
                   type: uuid
                   constraints:
                     primaryKey: true
-                    nullable: false
               - column:
                   name: username
                   type: varchar(255)
                   constraints:
                     nullable: false
+                    unique: true
               - column:
                   name: name
                   type: varchar(255)
@@ -41,13 +40,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: photo_url
-                  type: varchar(255)
-              - column:
-                  name: status
-                  type: boolean
-                  defaultValueBoolean: true
-                  constraints:
-                    nullable: false
+                  type: varchar(1023)
               - column:
                   name: story_count
                   type: int
@@ -55,14 +48,26 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: status
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: verified
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
                   name: created_at
-                  type: datetime
-                  defaultValueComputed: CURRENT_TIMESTAMP
+                  type: timestamp
+                  defaultValueComputed: now()
                   constraints:
                     nullable: false
               - column:
                   name: updated_at
-                  type: datetime
-                  defaultValueComputed: CURRENT_TIMESTAMP
+                  type: timestamp
+                  defaultValueComputed: now()
                   constraints:
                     nullable: false

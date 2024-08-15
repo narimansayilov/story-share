@@ -2,7 +2,8 @@ spring:
   profiles:
     include:
       - db
-      - security
       - s3
+      - mail
+      - security
+      - changelog
       - file-upload
-      - liquibase

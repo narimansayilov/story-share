@@ -1,19 +1,16 @@
 databaseChangeLog:
   - changeSet:
-      id: 20240814_1.0.8
-      author: alimardan
+      id: create-review_actions-table
+      author: Alimardan Alimardanov
       changes:
         - createTable:
             tableName: review_actions
-            schemaName: liquibase
             columns:
               - column:
                   name: id
                   type: uuid
                   constraints:
                     primaryKey: true
-                    nullable: false
-                    unique: true
               - column:
                   name: type
                   type: varchar(255)
@@ -24,34 +21,24 @@ databaseChangeLog:
                   type: uuid
                   constraints:
                     nullable: false
+                    references: reviews(id)
+                    foreignKeyName: fk_review_actions_reviews
               - column:
                   name: user_id
                   type: uuid
                   constraints:
                     nullable: false
+                    references: users(id)
+                    foreignKeyName: fk_review_actions_users
               - column:
                   name: created_at
                   type: timestamp
-                  defaultValueComputed: CURRENT_TIMESTAMP
+                  defaultValueComputed: now()
                   constraints:
                     nullable: false
               - column:
                   name: updated_at
                   type: timestamp
-                  defaultValueComputed: CURRENT_TIMESTAMP
+                  defaultValueComputed: now()
                   constraints:
                     nullable: false
-
-              - addForeignKeyConstraint:
-                  baseTableName: review_actions
-                  baseColumnNames: review_id
-                  referencedTableName: comments
-                  referencedColumnNames: id
-                  onDelete: cascade
-
-              - addForeignKeyConstraint:
-                  baseTableName: review_actions
-                  baseColumnNames: user_id
-                  referencedTableName: users
-                  referencedColumnNames: id
-                  onDelete: cascade

@@ -1,33 +1,30 @@
 databaseChangeLog:
   - changeSet:
-      id: 20240814_1.0.3
-      author: alimardan
+      id: create-story_images-table
+      author: Alimardan Alimardanov
       changes:
         - createTable:
-            ttableName: story_images
-            schemaName: liquibase
+            tableName: story_images
             columns:
               - column:
                   name: id
                   type: uuid
                   constraints:
                     primaryKey: true
-                    nullable: false
-                    unique: true
               - column:
                   name: is_main
                   type: boolean
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: status
                   type: boolean
+                  defaultValueBoolean: true
                   constraints:
-                    nullable: false
-                    defaultValueBoolean: true
+                    nullable: true
               - column:
                   name: url
-                  type: varchar(255)
+                  type: varchar(1023)
                   constraints:
                     nullable: false
               - column:
@@ -35,22 +32,17 @@ databaseChangeLog:
                   type: uuid
                   constraints:
                     nullable: false
+                    references: stories(id)
+                    foreignKeyName: fk_story_images_stories
               - column:
                   name: created_at
                   type: timestamp
-                  defaultValueComputed: CURRENT_TIMESTAMP
+                  defaultValueComputed: now()
                   constraints:
                     nullable: false
               - column:
                   name: updated_at
                   type: timestamp
-                  defaultValueComputed: CURRENT_TIMESTAMP
+                  defaultValueComputed: now()
                   constraints:
                     nullable: false
-
-              - addForeignKeyConstraint:
-                  baseTableName: story_images
-                  baseColumnNames: story_id
-                  referencedTableName: stories
-                  referencedColumnNames: id
-                  onDelete: cascade
