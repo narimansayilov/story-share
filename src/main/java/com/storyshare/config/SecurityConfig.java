@@ -20,11 +20,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private static final String[] AUTH_WHITELIST = {
-            "users/register",
-            "users/login",
             "/verify-email",
-            "users/{id}",
-            "review/**",
+            "/auth/**",
+            "/users/{id}",
+            "/stories/all",
+            "/stories/{id}",
             "/webjars/**",
             "/v2/api3-docs",
             "/v3/api-docs/**",
@@ -35,6 +35,15 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/configuration/ui",
             "/configuration/security",
+    };
+
+    private static final String[] AUTH_IGNORE_WHITELIST = {
+            "/tags/**",
+            "/cities/**",
+            "/roles/**",
+            "/users/all",
+            "/users/{id}/**",
+            "/users/set-role",
     };
 
     @Bean
@@ -48,8 +57,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/tags/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/cities/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/stories/**").permitAll()
-//                        .requestMatchers("/tags/**").hasRole("ADMIN")
-//                        .requestMatchers("/cities/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/review/**").permitAll()
+                        .requestMatchers(AUTH_IGNORE_WHITELIST).hasAuthority("ADMIN")
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

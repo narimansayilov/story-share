@@ -24,13 +24,9 @@ public class ReviewController {
         reviewService.addReview(request);
     }
 
-    @GetMapping("/all")
-    public List<ReviewResponse> getAllReview(Pageable pageable){
-        return reviewService.getAllReview(pageable);
-    }
-
-    @GetMapping("/story/{storyId}")
-    public List<ReviewResponse> getAllReviewByStoryId(Pageable pageable, @PathVariable UUID storyId){
+    @GetMapping("/all/{storyId}")
+    public List<ReviewResponse> getAllReviewByStoryId(Pageable pageable,
+                                                      @PathVariable UUID storyId){
         return reviewService.getAllReviewByStoryId(pageable, storyId);
     }
 
