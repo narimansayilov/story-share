@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-admin-role
+      author: Nariman Sayilov
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  value: '00000000-0000-0000-0000-000000000000'
+              - column:
+                  name: name
+                  value: 'ADMIN'
+              - column:
+                  name: created_at
+                  valueDate: '2024-01-01T00:00:00'
+              - column:
+                  name: updated_at
+                  valueDate: '2024-01-01T00:00:00'
