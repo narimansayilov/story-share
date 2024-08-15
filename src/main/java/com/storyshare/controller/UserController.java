@@ -40,19 +40,19 @@ public class UserController {
         return userService.update(request, image);
     }
 
-    @PatchMapping("/activate/{id}")
+    @PatchMapping("/{id}/activate")
     public void activateUser(@PathVariable UUID id) {
         userService.activateUser(id);
     }
 
-    @PatchMapping("/deactivate/{id}")
+    @PatchMapping("/{id}/deactivate")
     public void deactivateUser(@PathVariable UUID id) {
         userService.deactivateUser(id);
     }
 
     @PatchMapping("/set-role")
-    public void setRole(@RequestParam UUID userId,
-                        @RequestParam UUID roleId) {
+    public void setRole(@RequestParam(name = "user") UUID userId,
+                        @RequestParam(name = "role") UUID roleId) {
         userService.setRole(userId, roleId);
     }
 }
