@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 20240814_2
+      id: 20240814_1.0.1
       author: alimardan
       changes:
         - createTable:

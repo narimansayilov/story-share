@@ -72,4 +72,8 @@ public class ReviewActionService {
                 .map(ReviewActionMapper.INSTANCE::mapEntityToResponse)
                 .toList();
     }
+
+    public void deleteReviewAction(UUID reviewId){
+        reviewActionRepository.deleteById(reviewId);
+    }
 }

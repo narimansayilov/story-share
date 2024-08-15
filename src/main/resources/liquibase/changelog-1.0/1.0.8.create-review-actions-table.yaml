@@ -1,50 +1,57 @@
 databaseChangeLog:
   - changeSet:
-      id: 20240814_3
+      id: 20240814_1.0.8
       author: alimardan
       changes:
         - createTable:
-            tableName: users_roles
+            tableName: review_actions
             schemaName: liquibase
             columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: review_id
+                  type: uuid
+                  constraints:
+                    nullable: false
               - column:
                   name: user_id
                   type: uuid
                   constraints:
                     nullable: false
               - column:
-                  name: role_id
-                  type: uuid
-                  constraints:
-                    nullable: false
-              - column:
                   name: created_at
-                  type: datetime
+                  type: timestamp
                   defaultValueComputed: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false
               - column:
                   name: updated_at
-                  type: datetime
+                  type: timestamp
                   defaultValueComputed: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false
 
               - addForeignKeyConstraint:
-                  baseTableName: users_roles
-                  baseColumnNames: user_id
-                  constraintName: fk_users_roles_user_id
-                  referencedTableName: users
+                  baseTableName: review_actions
+                  baseColumnNames: review_id
+                  referencedTableName: comments
                   referencedColumnNames: id
+                  onDelete: cascade
 
               - addForeignKeyConstraint:
-                  baseTableName: users_roles
-                  baseColumnNames: role_id
-                  constraintName: fk_users_roles_role_id
-                  referencedTableName: roles
+                  baseTableName: review_actions
+                  baseColumnNames: user_id
+                  referencedTableName: users
                   referencedColumnNames: id
-
-              - addUniqueConstraint:
-                  tableName: users_roles
-                  columnNames: user_id, role_id
-                  constraintName: uq_users_roles_user_id_role_id
+                  onDelete: cascade
