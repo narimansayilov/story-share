@@ -27,8 +27,9 @@ public class UserEntity {
     String email;
     String password;
     String photoUrl;
-    Boolean status;
     Integer storyCount;
+    Boolean status;
+    Boolean verified;
 
     @ManyToMany
     @JoinTable(
@@ -46,7 +47,8 @@ public class UserEntity {
 
     @PrePersist
     protected void autoFill(){
-        this.status = true;
         this.storyCount = 0;
+        this.status = true;
+        this.verified = false;
     }
 }
