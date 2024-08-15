@@ -1,6 +1,5 @@
 package com.storyshare.service;
 
-import com.storyshare.entity.UserEntity;
 import com.storyshare.entity.VerificationTokenEntity;
 import com.storyshare.repository.UserRepository;
 import com.storyshare.repository.VerificationTokenRepository;
@@ -10,7 +9,6 @@ import org.springframework.mail.MailException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -40,6 +38,7 @@ public class VerificationService {
         try {
             emailService.sendVerificationEmail(email, token);
         } catch (MailException e) {
+            System.out.println("Email could not be sent:" + e.getMessage());
             throw new RuntimeException("Failed to send verification email.", e);
         }
     }
@@ -51,7 +50,7 @@ public class VerificationService {
                 .map(verificationToken -> {
                     return userRepository.findByEmail(verificationToken.getEmail())
                             .map(user -> {
-//                                user.setEmailVerified(true);
+                                user.setVerified(true);
                                 userRepository.save(user);
                                 tokenRepository.delete(verificationToken);
                                 return "Email successfully verified!";

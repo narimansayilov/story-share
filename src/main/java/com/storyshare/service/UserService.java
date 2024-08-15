@@ -37,6 +37,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final AmazonS3Service amazonS3Service;
     private final AuthenticationManager authenticationManager;
+    private final VerificationService verificationService;
 
     public UserResponse register(UserRegisterRequest request){
         userRepository.findByUsername(request.getUsername()).ifPresent(user -> {
@@ -49,6 +50,7 @@ public class UserService {
         entity.setPassword(passwordEncoder.encode(request.getPassword()));
         entity.setRoles(List.of(getRole()));
         userRepository.save(entity);
+        verificationService.generateAndSendVerificationToken(entity.getEmail());
         return UserMapper.INSTANCE.entityToResponse(entity);
     }
 

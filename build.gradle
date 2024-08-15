@@ -23,6 +23,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+    // Mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     // Security
     implementation 'org.springframework.boot:spring-boot-starter-security:3.2.4'
 
@@ -36,6 +39,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     // Database
+    /*    implementation 'org.liquibase:liquibase-core:4.26.0'*/
     runtimeOnly 'org.postgresql:postgresql'
 
     // Mapper
@@ -57,15 +61,6 @@ dependencies {
 
     // AWS
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-
-
-    //Mail
-    implementation 'org.springframework.boot:spring-boot-starter-mail:3.3.2'
-
-
-    // Liquibase
-    implementation 'org.liquibase:liquibase-core:4.26.0'
-
 }
 
 tasks.named('test') {

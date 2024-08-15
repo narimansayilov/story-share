@@ -52,37 +52,4 @@ class EmailServiceTest {
 
         verify(javaMailSender, times(1)).send(any(SimpleMailMessage.class));
     }
-
-    @Test
-    void sendCurrentUserEmail_Success() {
-        String subject = "Test Subject";
-        String text = "Test Email Content";
-        String currentUsername = "testUser";
-        UserEntity user = new UserEntity();
-        user.setEmail("user@example.com");
-
-        when(userService.getCurrentUsername()).thenReturn(currentUsername);
-        when(userRepository.findByUsername(currentUsername)).thenReturn(java.util.Optional.of(user));
-
-        doNothing().when(javaMailSender).send(any(SimpleMailMessage.class));
-
-        emailService.sendCurrentUserEmail(subject, text);
-
-        verify(javaMailSender, times(1)).send(any(SimpleMailMessage.class));
-    }
-
-    @Test
-    void sendCurrentUserEmail_UserNotFound() {
-        String subject = "Test Subject";
-        String text = "Test Email Content";
-        String currentUsername = "testUser";
-
-        when(userService.getCurrentUsername()).thenReturn(currentUsername);
-        when(userRepository.findByUsername(currentUsername)).thenReturn(java.util.Optional.empty());
-
-        assertThrows(RuntimeException.class, () -> emailService.sendCurrentUserEmail(subject, text));
-
-        verify(javaMailSender, never()).send(any(SimpleMailMessage.class));
-    }
 }
-

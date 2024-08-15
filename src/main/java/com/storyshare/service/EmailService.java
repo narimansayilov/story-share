@@ -1,5 +1,4 @@
 package com.storyshare.service;
-
 import com.storyshare.entity.UserEntity;
 import com.storyshare.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -15,10 +14,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailService {
     private final JavaMailSender javaMailSender;
-    private final UserRepository userRepository;
-    private final UserService userService;
 
-    @Value("${SPRING_MAIL_USERNAME}")
+    @Value("${spring.mail.username}")
     private String fromEmail;
 
 
@@ -26,7 +23,7 @@ public class EmailService {
     public void sendVerificationEmail(String to, String token) {
         String verificationUrl = "http://localhost:8080/verify-email?token=" + token;
         String subject = "Email Verification";
-        String textMessage = "lease verify your email by clicking the following link" + verificationUrl;
+        String textMessage = "please verify your email by clicking the following link:\n" + verificationUrl;
         SimpleMailMessage mail = createMail(to, subject, textMessage);
         try {
             javaMailSender.send(mail);
@@ -38,20 +35,6 @@ public class EmailService {
     @Transactional
     public void sendEmail(String to, String subject, String text) {
         SimpleMailMessage message = createMail(to, subject, text);
-        try {
-            javaMailSender.send(message);
-        } catch (MailException e) {
-            throw new RuntimeException("Error sending email", e);
-        }
-    }
-
-    @Transactional
-    public void sendCurrentUserEmail(String subject, String text) {
-        String currentUsername = userService.getCurrentUsername();
-        UserEntity user = userRepository.findByUsername(currentUsername)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        SimpleMailMessage message = createMail(user.getEmail(), subject, text);
         try {
             javaMailSender.send(message);
         } catch (MailException e) {

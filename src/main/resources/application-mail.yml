@@ -1,15 +1,13 @@
 spring:
   mail:
-    host: smtp.mail.ru
-    port: 465
-    username: ${SPRING_MAIL_USERNAME}
-    password: ${SPRING_MAIL_PASSWORD}
+    protocol: smtp
+    host: ${spring.mail.host}
+    port: 587
+    username: ${spring.mail.username}
+    password: ${spring.mail.password}
     properties:
       mail:
         smtp:
           auth: true
           starttls:
-            enable: true
-            required: true
-          ssl:
             enable: true
