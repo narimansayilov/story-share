@@ -51,6 +51,13 @@ public class ErrorHandler {
         return buildExceptionResponse(exception.getMessage(), CONFLICT.value(), "DELETION_ERROR");
     }
 
+    @ExceptionHandler(TokenExpiredException.class)
+    @ResponseStatus(UNAUTHORIZED)
+    public ExceptionResponse handleTokenExpiredException(TokenExpiredException exception) {
+        return buildExceptionResponse(exception.getMessage(), UNAUTHORIZED.value(), "UNAUTHORIZED_ACCESS");
+    }
+
+
     @ExceptionHandler(AlreadyExistsException.class)
     @ResponseStatus(CONFLICT)
     public ExceptionResponse handleAlreadyExistsException(AlreadyExistsException exception) {
