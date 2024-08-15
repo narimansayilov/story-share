@@ -1,33 +1,30 @@
 databaseChangeLog:
   - changeSet:
-      id: 20240814_1.0.1
-      author: alimardan
+      id: create-roles-table
+      author: Alimardan Alimardanov
       changes:
         - createTable:
             tableName: roles
-            schemaName: liquibase
             columns:
               - column:
                   name: id
                   type: uuid
                   constraints:
                     primaryKey: true
-                    nullable: false
               - column:
                   name: name
                   type: varchar(255)
                   constraints:
                     nullable: false
-                    unique: true
               - column:
                   name: created_at
-                  type: datetime
-                  defaultValueComputed: CURRENT_TIMESTAMP
+                  type: timestamp
+                  defaultValueComputed: now()
                   constraints:
                     nullable: false
               - column:
                   name: updated_at
-                  type: datetime
-                  defaultValueComputed: CURRENT_TIMESTAMP
+                  type: timestamp
+                  defaultValueComputed: now()
                   constraints:
                     nullable: false
