@@ -22,6 +22,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
                   name: expiration_date
                   type: timestamp
                   constraints:

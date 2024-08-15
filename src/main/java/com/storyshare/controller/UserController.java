@@ -1,17 +1,16 @@
 package com.storyshare.controller;
 
-import com.storyshare.dto.request.UserLoginRequest;
-import com.storyshare.dto.request.UserRegisterRequest;
+import com.storyshare.dto.criteria.UserCriteriaRequest;
 import com.storyshare.dto.request.UserUpdateRequest;
-import com.storyshare.dto.response.JwtResponse;
 import com.storyshare.dto.response.UserResponse;
 import com.storyshare.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -19,17 +18,6 @@ import java.util.UUID;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-
-    @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserResponse register(@RequestBody @Valid UserRegisterRequest request){
-        return userService.register(request);
-    }
-
-    @PostMapping("/login")
-    public JwtResponse login(@RequestBody @Valid UserLoginRequest request) {
-        return userService.login(request);
-    }
 
     @GetMapping("/my")
     public UserResponse getMyProfile(){
@@ -41,9 +29,30 @@ public class UserController {
         return userService.getUser(id);
     }
 
+    @GetMapping("/all")
+    public List<UserResponse> getAllUsers(Pageable pageable, UserCriteriaRequest criteriaRequest) {
+        return userService.getAllUsers(pageable, criteriaRequest);
+    }
+
     @PutMapping("/update")
     public UserResponse update(@RequestPart("request") @Valid UserUpdateRequest request,
                                @RequestPart("image") MultipartFile image) {
         return userService.update(request, image);
+    }
+
+    @PatchMapping("/{id}/activate")
+    public void activateUser(@PathVariable UUID id) {
+        userService.activateUser(id);
+    }
+
+    @PatchMapping("/{id}/deactivate")
+    public void deactivateUser(@PathVariable UUID id) {
+        userService.deactivateUser(id);
+    }
+
+    @PatchMapping("/set-role")
+    public void setRole(@RequestParam(name = "user") UUID userId,
+                        @RequestParam(name = "role") UUID roleId) {
+        userService.setRole(userId, roleId);
     }
 }

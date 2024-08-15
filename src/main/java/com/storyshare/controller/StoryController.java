@@ -31,7 +31,7 @@ public class StoryController {
         return storyService.getStory(id);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     private List<StoryResponse> getAllStories(Pageable pageable, StoryCriteriaRequest criteriaRequest) {
         return storyService.getAllStories(pageable, criteriaRequest);
     }

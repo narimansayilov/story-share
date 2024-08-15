@@ -8,11 +8,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserLoginRequest {
-    @Size(min = 3, max = 50, message = "Username must be between 2 and 50 characters")
-    @Pattern(regexp = "^[a-zA-Z0-9._-]+$", message = "Username can only contain letters, numbers, dots, underscores, and dashes")
-    @NotBlank(message = "Username cannot be blank")
-    private String username;
+public class PasswordResetRequest {
+    @NotBlank(message = "Token is required")
+    private String token;
 
     @Size(min = 8, max = 64, message = "Password must be at least 8 characters long")
     @Pattern(
