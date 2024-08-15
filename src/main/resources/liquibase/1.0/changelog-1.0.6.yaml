@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-stories_tags-table
+      author: Alimardan Alimardanov
+      changes:
+        - createTable:
+            tableName: stories_tags
+            columns:
+              - column:
+                  name: story_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tag_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            columnNames: story_id, tag_id
+            constraintName: pk_stories_tags
+            tableName: stories_tags
+        - addForeignKeyConstraint:
+            baseTableName: stories_tags
+            baseColumnNames: story_id
+            referencedTableName: stories
+            referencedColumnNames: id
+            constraintName: fk_stories_tags_stories
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: stories_tags
+            baseColumnNames: tag_id
+            referencedTableName: tags
+            referencedColumnNames: id
+            constraintName: fk_stories_tags_tags
+            onDelete: CASCADE

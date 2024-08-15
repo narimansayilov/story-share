@@ -1,19 +1,16 @@
 databaseChangeLog:
   - changeSet:
-      id: 20240814_1.0.4
-      author: alimardan
+      id: create-tags-table
+      author: Alimardan Alimardanov
       changes:
         - createTable:
             tableName: tags
-            schemaName: liquibase
             columns:
               - column:
                   name: id
                   type: uuid
                   constraints:
                     primaryKey: true
-                    nullable: false
-                    unique: true
               - column:
                   name: name
                   type: varchar(255)
@@ -21,10 +18,10 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: story_count
-                  type: int4
+                  type: int
+                  defaultValueNumeric: 0
                   constraints:
                     nullable: false
-                    defaultValue: 0
               - column:
                   name: translations
                   type: jsonb
@@ -33,16 +30,12 @@ databaseChangeLog:
               - column:
                   name: created_at
                   type: timestamp
-                  defaultValueComputed: CURRENT_TIMESTAMP
+                  defaultValueComputed: now()
                   constraints:
                     nullable: false
               - column:
                   name: updated_at
                   type: timestamp
-                  defaultValueComputed: CURRENT_TIMESTAMP
+                  defaultValueComputed: now()
                   constraints:
                     nullable: false
-              - addDefaultValue:
-                  columnName: story_count
-                  tableName: tags
-                  defaultValue: 0
