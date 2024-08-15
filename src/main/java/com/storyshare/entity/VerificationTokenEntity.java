@@ -1,5 +1,6 @@
 package com.storyshare.entity;
 
+import com.storyshare.enums.VerificationType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -12,6 +13,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "verification_tokens")
@@ -23,6 +25,9 @@ public class VerificationTokenEntity {
     String token;
     String email;
     LocalDateTime expirationDate;
+
+    @Enumerated(EnumType.STRING)
+    VerificationType type;
 
     @CreationTimestamp
     LocalDateTime createdAt;
