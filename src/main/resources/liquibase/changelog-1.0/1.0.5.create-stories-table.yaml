@@ -1,0 +1,129 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20240814_1.0.5
+      author: alimardan
+      changes:
+        - createTable:
+            tableName: stories
+            schemaName: liquibase
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: title
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+                  constraints:
+                    nullable: true
+              - column:
+                  name: view_count
+                  type: int4
+                  constraints:
+                    nullable: false
+                    defaultValue: 0
+              - column:
+                  name: like_count
+                  type: int4
+                  constraints:
+                    nullable: false
+                    defaultValue: 0
+              - column:
+                  name: dislike_count
+                  type: int4
+                  constraints:
+                    nullable: false
+                    defaultValue: 0
+              - column:
+                  name: comment_count
+                  type: int4
+                  constraints:
+                    nullable: false
+                    defaultValue: 0
+              - column:
+                  name: favorite_count
+                  type: int4
+                  constraints:
+                    nullable: false
+                    defaultValue: 0
+              - column:
+                  name: status
+                  type: boolean
+                  constraints:
+                    nullable: false
+                    defaultValueBoolean: true
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: true
+              - column:
+                  name: city_id
+                  type: uuid
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - addForeignKeyConstraint:
+                  baseTableName: stories
+                  baseColumnNames: user_id
+                  referencedTableName: users
+                  referencedColumnNames: id
+                  onDelete: cascade
+
+              - addForeignKeyConstraint:
+                  baseTableName: stories
+                  baseColumnNames: city_id
+                  referencedTableName: cities
+                  referencedColumnNames: id
+                  onDelete: set null
+
+              - createTable:
+                  tableName: stories_tags
+                  columns:
+                    - column:
+                        name: story_id
+                        type: uuid
+                        constraints:
+                          nullable: false
+                    - column:
+                        name: tag_id
+                        type: uuid
+                        constraints:
+                          nullable: false
+              - addPrimaryKey:
+                  tableName: stories_tags
+                  columnNames: story_id, tag_id
+
+              - addForeignKeyConstraint:
+                  baseTableName: stories_tags
+                  baseColumnNames: story_id
+                  referencedTableName: stories
+                  referencedColumnNames: id
+                  onDelete: cascade
+
+              - addForeignKeyConstraint:
+                  baseTableName: stories_tags
+                  baseColumnNames: tag_id
+                  referencedTableName: tags
+                  referencedColumnNames: id
+                  onDelete: cascade

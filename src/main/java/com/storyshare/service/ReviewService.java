@@ -53,6 +53,7 @@ public class ReviewService {
         reviewRepository.save(entity);
     }
 
+    //
     public List<ReviewResponse> getAllReview(Pageable pageable){
         Page<ReviewEntity> reviews = reviewRepository.findAllActiveReviews(pageable);
         return ReviewMapper.INSTANCE.mapEntityToResponseList(reviews);
@@ -67,17 +68,16 @@ public class ReviewService {
         ReviewEntity entity = reviewRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("REVIEW NOT FOUND"));
         UserResponse user = UserMapper.INSTANCE.entityToResponse(entity.getUser());
-        StoryResponse story = StoryMapper.INSTANCE.entityToResponse(entity.getStory(), null);
         ReviewResponse reviewResponse = ReviewMapper.INSTANCE.mapEntityToResponse(entity);
         reviewResponse.setUser(user);
-        reviewResponse.setStoryId(story.getId());
+        reviewResponse.setStoryId(entity.getStory().getId());
         return reviewResponse;
     }
 
-    public List<ReviewResponse> getReviewReplyById(UUID id) {
+    public List<ReviewResponse> getReviewReplyById(Pageable pageable, UUID id) {
         reviewRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("REVIEW NOT FOUND"));
-        return reviewRepository.findByParentId(id).stream()
+        return reviewRepository.findByParentId(pageable, id).stream()
                 .map(ReviewMapper.INSTANCE::mapEntityToResponse)
                 .toList();
     }

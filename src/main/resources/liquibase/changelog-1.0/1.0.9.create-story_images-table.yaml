@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20240814_1.0.3
+      author: alimardan
+      changes:
+        - createTable:
+            ttableName: story_images
+            schemaName: liquibase
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: is_main
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: boolean
+                  constraints:
+                    nullable: false
+                    defaultValueBoolean: true
+              - column:
+                  name: url
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: story_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - addForeignKeyConstraint:
+                  baseTableName: story_images
+                  baseColumnNames: story_id
+                  referencedTableName: stories
+                  referencedColumnNames: id
+                  onDelete: cascade

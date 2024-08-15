@@ -36,4 +36,9 @@ public class ReviewActionController {
     public List<ReviewActionResponse> findAllByReviewID(@PathVariable UUID reviewId){
         return reviewActionService.findAllByReviewID(reviewId);
     }
+
+    @GetMapping("/delete/{reviewId}")
+    public void deleteReviewAction(@PathVariable UUID reviewId){
+        reviewActionService.deleteReviewAction(reviewId);
+    }
 }    

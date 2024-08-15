@@ -20,7 +20,7 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, UUID> {
     @Query("select r from ReviewEntity r where r.status = true")
     Page<ReviewEntity> findAllActiveReviews(Pageable pageable);
 
-    List<ReviewEntity> findByParentId(UUID parentId);
+    List<ReviewEntity> findByParentId(Pageable pageable, UUID parentId);
 
     Page<ReviewEntity> findByStoryId(Pageable pageable, UUID storyId);
 }
