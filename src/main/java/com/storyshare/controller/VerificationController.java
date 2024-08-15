@@ -1,5 +1,6 @@
 package com.storyshare.controller;
 
+import com.storyshare.enums.VerificationType;
 import com.storyshare.service.VerificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ public class VerificationController {
 
     @GetMapping("/verify-email")
     public ResponseEntity<String> verifyEmail(@RequestParam String token) {
-        String message = verificationService.verifyEmail(token);
+        String message = verificationService.verifyToken(token, VerificationType.EMAIL_VERIFICATION);
         return ResponseEntity.ok(message);
     }
 }
