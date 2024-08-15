@@ -53,12 +53,6 @@ public class ReviewService {
         reviewRepository.save(entity);
     }
 
-    //
-    public List<ReviewResponse> getAllReview(Pageable pageable){
-        Page<ReviewEntity> reviews = reviewRepository.findAllActiveReviews(pageable);
-        return ReviewMapper.INSTANCE.mapEntityToResponseList(reviews);
-    }
-
     public List<ReviewResponse> getAllReviewByStoryId(Pageable pageable, UUID storyId){
         Page<ReviewEntity> reviews = reviewRepository.findByStoryId(pageable, storyId);
         return ReviewMapper.INSTANCE.mapEntityToResponseList(reviews);
