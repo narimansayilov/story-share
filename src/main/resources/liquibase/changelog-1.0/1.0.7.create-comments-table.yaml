@@ -1,0 +1,99 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20240814_1.0.7
+      author: alimardan
+      changes:
+        - createTable:
+            tableName: comments
+            schemaName: liquibase
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: comment
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: parent_review
+                  type: boolean
+                  constraints:
+                    nullable: false
+                    defaultValueBoolean: false
+              - column:
+                  name: like_count
+                  type: int4
+                  constraints:
+                    nullable: false
+                    defaultValue: 0
+              - column:
+                  name: dislike_count
+                  type: int4
+                  constraints:
+                    nullable: false
+                    defaultValue: 0
+              - column:
+                  name: reply_count
+                  type: int4
+                  constraints:
+                    nullable: false
+                    defaultValue: 0
+              - column:
+                  name: status
+                  type: boolean
+                  constraints:
+                    nullable: false
+                    defaultValueBoolean: true
+              - column:
+                  name: parent_id
+                  type: uuid
+                  constraints:
+                    nullable: true
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: story_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+              - addForeignKeyConstraint:
+                  baseTableName: comments
+                  baseColumnNames: parent_id
+                  referencedTableName: comments
+                  referencedColumnNames: id
+                  onDelete: set null
+
+              - addForeignKeyConstraint:
+                  baseTableName: comments
+                  baseColumnNames: user_id
+                  referencedTableName: users
+                  referencedColumnNames: id
+                  onDelete: cascade
+
+              - addForeignKeyConstraint:
+                  baseTableName: comments
+                  baseColumnNames: story_id
+                  referencedTableName: stories
+                  referencedColumnNames: id
+                  onDelete: cascade

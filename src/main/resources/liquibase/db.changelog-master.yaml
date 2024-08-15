@@ -1,7 +1,3 @@
 databaseChangeLog:
   - include:
-      file: liquibase/changelog/1.create-users-table.yaml
-  - include:
-      file: liquibase/changelog/2.create-roles-table.yaml
-  - include:
-      file: liquibase/changelog/3.create-users-roles-table.yaml
+      file: liquibase/changelog-1.0

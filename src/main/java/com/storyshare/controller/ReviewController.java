@@ -5,6 +5,7 @@ import com.storyshare.dto.request.ReviewRequest;
 import com.storyshare.dto.response.ReviewResponse;
 import com.storyshare.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,8 +40,8 @@ public class ReviewController {
     }
 
     @GetMapping("/reply/{id}")
-    public List<ReviewResponse> getReviewReplayById(@PathVariable UUID id) {
-        return reviewService.getReviewReplyById(id);
+    public List<ReviewResponse> getReviewReplayById(Pageable pageable, @PathVariable UUID id) {
+        return reviewService.getReviewReplyById(pageable, id);
     }
 
     @DeleteMapping("/delete/{id}")
