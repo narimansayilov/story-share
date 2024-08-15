@@ -1,6 +1,8 @@
 package com.storyshare.service;
 
 import com.storyshare.entity.VerificationTokenEntity;
+import com.storyshare.enums.VerificationType;
+import com.storyshare.exception.NotFoundException;
 import com.storyshare.repository.UserRepository;
 import com.storyshare.repository.VerificationTokenRepository;
 import jakarta.transaction.Transactional;
@@ -20,42 +22,39 @@ public class VerificationService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void generateAndSendVerificationToken(String email) {
+    public void generateAndSendToken(String email, VerificationType type) {
         String token = generateToken();
         LocalDateTime expirationDate = LocalDateTime.now().plusHours(1);
 
-        VerificationTokenEntity verificationToken = new VerificationTokenEntity();
-        verificationToken.setToken(token);
-        verificationToken.setEmail(email);
-        verificationToken.setExpirationDate(expirationDate);
+        VerificationTokenEntity verificationToken = VerificationTokenEntity.builder()
+                .token(token)
+                .email(email)
+                .expirationDate(expirationDate)
+                .type(type)
+                .build();
 
-        try {
-            tokenRepository.save(verificationToken);
-        } catch (Exception e) {
-            throw new RuntimeException("Token could not be saved", e);
-        }
-
-        try {
-            emailService.sendVerificationEmail(email, token);
-        } catch (MailException e) {
-            System.out.println("Email could not be sent:" + e.getMessage());
-            throw new RuntimeException("Failed to send verification email.", e);
-        }
+        tokenRepository.save(verificationToken);
+        sendEmailByType(email, type, token);
     }
 
     @Transactional
-    public String verifyEmail(String token) {
+    public String verifyToken(String token, VerificationType type) {
         return tokenRepository.findByToken(token)
+                .filter(verificationToken -> verificationToken.getType() == type)
                 .filter(verificationToken -> LocalDateTime.now().isBefore(verificationToken.getExpirationDate()))
                 .map(verificationToken -> {
-                    return userRepository.findByEmail(verificationToken.getEmail())
-                            .map(user -> {
-                                user.setVerified(true);
-                                userRepository.save(user);
-                                tokenRepository.delete(verificationToken);
-                                return "Email successfully verified!";
-                            })
-                            .orElse("User not found.");
+                    if (type == VerificationType.EMAIL_VERIFICATION) {
+                        return userRepository.findByEmail(verificationToken.getEmail())
+                                .map(user -> {
+                                    user.setVerified(true);
+                                    userRepository.save(user);
+                                    tokenRepository.delete(verificationToken);
+                                    return "Email successfully verified!";
+                                })
+                                .orElse("User not found.");
+                    } else {
+                        return "Invalid token type.";
+                    }
                 })
                 .orElse("Invalid or expired token.");
     }
@@ -68,5 +67,17 @@ public class VerificationService {
 
     public static String generateToken() {
         return UUID.randomUUID().toString();
+    }
+
+    public void sendEmailByType(String email,VerificationType type, String token) {
+        String emailSubject = "Email Verification";
+        String passwordSubject = "Password Reset Request";
+        String emailUrl = "http://localhost:8080/verify-email?token=";
+        String emailBody = "Please verify your action by clicking the following link:\n";
+
+        String subject = (type == VerificationType.EMAIL_VERIFICATION) ? emailSubject : passwordSubject;
+        String body = (type == VerificationType.EMAIL_VERIFICATION) ? emailBody + emailUrl + token : token;
+
+        emailService.sendEmail(email, subject,body);
     }
 }
