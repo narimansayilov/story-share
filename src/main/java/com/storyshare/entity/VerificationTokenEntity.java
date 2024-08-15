@@ -14,7 +14,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "email_verification_tokens")
+@Table(name = "verification_tokens")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class VerificationTokenEntity {
     @Id

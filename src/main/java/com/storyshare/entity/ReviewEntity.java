@@ -14,7 +14,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "comments")
+@Table(name = "reviews")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReviewEntity {
     @Id
