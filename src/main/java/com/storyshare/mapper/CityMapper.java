@@ -19,9 +19,11 @@ public interface CityMapper {
     @Mapping(target = "parent.id", source = "parentId")
     CityEntity requestToEntity(CityRequest request);
 
+    @Mapping(target = "parentId", source = "parent.id")
     CityResponse entityToResponse(CityEntity entity);
 
     List<CityResponse> entitiesToResponses(Page<CityEntity> entities);
 
+    @Mapping(source = "parentId", target = "parent.id")
     void mapRequestToEntity(@MappingTarget CityEntity entity, CityRequest request);
 }
