@@ -3,26 +3,25 @@ package com.storyshare.service;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-class VerificationServiceTest {
+class RoleServiceTest {
 
     @Test
-    void generateAndSendToken() {
+    void addRole() {
     }
 
     @Test
-    void verifyToken() {
+    void getRole() {
     }
 
     @Test
-    void testVerifyToken() {
+    void getAllRoles() {
     }
 
     @Test
-    void generateToken() {
+    void updateRole() {
     }
 
     @Test
-    void sendEmailByType() {
+    void deleteRole() {
     }
 }

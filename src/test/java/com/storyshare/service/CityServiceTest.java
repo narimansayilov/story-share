@@ -4,25 +4,25 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class VerificationServiceTest {
+class CityServiceTest {
 
     @Test
-    void generateAndSendToken() {
+    void addCity() {
     }
 
     @Test
-    void verifyToken() {
+    void getCity() {
     }
 
     @Test
-    void testVerifyToken() {
+    void getAllCities() {
     }
 
     @Test
-    void generateToken() {
+    void updateCity() {
     }
 
     @Test
-    void sendEmailByType() {
+    void deleteCity() {
     }
 }

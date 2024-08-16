@@ -4,6 +4,8 @@ import com.storyshare.dto.criteria.StoryCriteriaRequest;
 import com.storyshare.dto.request.StoryRequest;
 import com.storyshare.dto.response.StoryResponse;
 import com.storyshare.service.StoryService;
+import com.storyshare.util.annotation.ValidImages;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -21,8 +23,8 @@ public class StoryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void addStory(@RequestPart("request") StoryRequest request,
-                         @RequestPart("images") List<MultipartFile> images) {
+    public void addStory(@RequestPart("request") @Valid StoryRequest request,
+                         @RequestPart("images") @ValidImages List<MultipartFile> images) {
         storyService.addStory(request, images);
     }
 
@@ -43,8 +45,8 @@ public class StoryController {
 
     @PutMapping("/{id}")
     public StoryResponse updateStory(@PathVariable UUID id,
-                                     @RequestPart("request") StoryRequest request,
-                                     @RequestPart("images") List<MultipartFile> images) {
+                                     @RequestPart("request") @Valid StoryRequest request,
+                                     @RequestPart("images") @ValidImages List<MultipartFile> images) {
         return storyService.updateStory(id, request, images);
     }
 

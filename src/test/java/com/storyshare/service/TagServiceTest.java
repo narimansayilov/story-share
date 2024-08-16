@@ -4,25 +4,25 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class VerificationServiceTest {
+class TagServiceTest {
 
     @Test
-    void generateAndSendToken() {
+    void addTag() {
     }
 
     @Test
-    void verifyToken() {
+    void getTag() {
     }
 
     @Test
-    void testVerifyToken() {
+    void getAllTags() {
     }
 
     @Test
-    void generateToken() {
+    void updateTag() {
     }
 
     @Test
-    void sendEmailByType() {
+    void deleteTag() {
     }
 }
