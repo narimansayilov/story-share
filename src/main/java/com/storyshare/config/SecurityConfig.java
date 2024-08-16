@@ -22,7 +22,6 @@ public class SecurityConfig {
     private static final String[] AUTH_WHITELIST = {
             "/verify-email",
             "/auth/**",
-            "/users/{id}",
             "/stories/all",
             "/stories/{id}",
             "/webjars/**",
