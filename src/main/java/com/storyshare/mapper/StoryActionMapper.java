@@ -12,5 +12,4 @@ public interface StoryActionMapper {
 
     @Mapping(target = "story.title", source = "story.title")
     StoryActionResponse toResponse(StoryActionEntity entity);
-
 }

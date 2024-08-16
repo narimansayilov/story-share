@@ -23,7 +23,6 @@ public interface StoryMapper {
 
     StoryResponse entityToResponse(StoryEntity entity, List<StoryImageResponse> images);
 
-    List<StoryResponse> entitiesToResponses(Page<StoryEntity> entities);
-
-    void mapRequestToEntity(@MappingTarget StoryEntity storyEntity, StoryRequest request);
+    @Mapping(target = "city.id", source = "request.cityId")
+    void mapRequestToEntity(@MappingTarget StoryEntity storyEntity, StoryRequest request, List<TagEntity> tags);
 }
