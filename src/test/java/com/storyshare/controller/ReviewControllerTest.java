@@ -17,10 +17,12 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 
 class ReviewControllerTest {
+
     @Mock
-    ReviewService reviewService;
+    private ReviewService reviewService;
+
     @InjectMocks
-    ReviewController reviewController;
+    private ReviewController reviewController;
 
     @BeforeEach
     void setUp() {
@@ -29,37 +31,83 @@ class ReviewControllerTest {
 
     @Test
     void testAddReview() {
-        reviewController.addReview(new ReviewRequest());
+        ReviewRequest mockReviewRequest = new ReviewRequest();
+        mockReviewRequest.setComment("Great story!");
+        mockReviewRequest.setParentReview(true);
+        mockReviewRequest.setParentId(UUID.randomUUID());
+        mockReviewRequest.setStoryId(UUID.randomUUID());
+
+        reviewController.addReview(mockReviewRequest);
+
         verify(reviewService).addReview(any(ReviewRequest.class));
     }
 
     @Test
     void testGetAllReviewByStoryId() {
-        when(reviewService.getAllReviewByStoryId(any(Pageable.class), any(UUID.class))).thenReturn(List.of(new ReviewResponse()));
+        UUID storyId = UUID.randomUUID();
+        ReviewResponse mockReviewResponse = new ReviewResponse();
+        mockReviewResponse.setId(UUID.randomUUID());
+        mockReviewResponse.setComment("Amazing!");
+        mockReviewResponse.setLikeCount(10);
+        mockReviewResponse.setDislikeCount(2);
+        mockReviewResponse.setReplyCount(3);
+        mockReviewResponse.setStoryId(storyId);
 
-        List<ReviewResponse> result = reviewController.getAllReviewByStoryId(null, new UUID(0L, 0L));
-        Assertions.assertEquals(List.of(new ReviewResponse()), result);
+        when(reviewService.getAllReviewByStoryId(any(Pageable.class), any(UUID.class)))
+                .thenReturn(List.of(mockReviewResponse));
+
+        List<ReviewResponse> result = reviewController.getAllReviewByStoryId(Pageable.unpaged(), storyId);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertEquals(mockReviewResponse, result.get(0));
     }
 
     @Test
     void testGetReviewById() {
-        when(reviewService.getReviewById(any(UUID.class))).thenReturn(new ReviewResponse());
+        UUID reviewId = UUID.randomUUID();
+        ReviewResponse mockReviewResponse = new ReviewResponse();
+        mockReviewResponse.setId(reviewId);
+        mockReviewResponse.setComment("Excellent review!");
+        mockReviewResponse.setLikeCount(5);
+        mockReviewResponse.setDislikeCount(0);
+        mockReviewResponse.setReplyCount(1);
 
-        ReviewResponse result = reviewController.getReviewById(new UUID(0L, 0L));
-        Assertions.assertEquals(new ReviewResponse(), result);
+        when(reviewService.getReviewById(any(UUID.class))).thenReturn(mockReviewResponse);
+
+        ReviewResponse result = reviewController.getReviewById(reviewId);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(mockReviewResponse, result);
+        Assertions.assertEquals(reviewId, result.getId());
     }
 
     @Test
     void testGetReviewReplayById() {
-        when(reviewService.getReviewReplyById(any(Pageable.class), any(UUID.class))).thenReturn(List.of(new ReviewResponse()));
+        UUID reviewId = UUID.randomUUID();
+        ReviewResponse mockReviewResponse = new ReviewResponse();
+        mockReviewResponse.setId(UUID.randomUUID());
+        mockReviewResponse.setComment("This is a reply to a review.");
+        mockReviewResponse.setLikeCount(2);
+        mockReviewResponse.setDislikeCount(1);
+        mockReviewResponse.setReplyCount(0);
 
-        List<ReviewResponse> result = reviewController.getReviewReplayById(null, new UUID(0L, 0L));
-        Assertions.assertEquals(List.of(new ReviewResponse()), result);
+        when(reviewService.getReviewReplyById(any(Pageable.class), any(UUID.class)))
+                .thenReturn(List.of(mockReviewResponse));
+
+        List<ReviewResponse> result = reviewController.getReviewReplayById(Pageable.unpaged(), reviewId);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertEquals(mockReviewResponse, result.get(0));
     }
 
     @Test
     void testDeleteReviewById() {
-        reviewController.deleteReviewById(new UUID(0L, 0L));
+        UUID reviewId = UUID.randomUUID();
+
+        reviewController.deleteReviewById(reviewId);
+
         verify(reviewService).deleteReviewById(any(UUID.class));
     }
 }

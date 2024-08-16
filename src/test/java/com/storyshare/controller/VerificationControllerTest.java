@@ -1,19 +1,18 @@
 package com.storyshare.controller;
 
+import com.storyshare.enums.VerificationType;
 import com.storyshare.service.VerificationService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class VerificationControllerTest {
 
     @Mock
@@ -22,33 +21,22 @@ class VerificationControllerTest {
     @InjectMocks
     private VerificationController verificationController;
 
-    @Test
-    void verifyEmail_Success() {
-        String token = "valid-token";
-        String expectedMessage = "Email successfully verified!";
-
-        when(verificationService.verifyEmail(token)).thenReturn(expectedMessage);
-
-        ResponseEntity<String> response = verificationController.verifyEmail(token);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertEquals(expectedMessage, response.getBody());
-
-        verify(verificationService, times(1)).verifyEmail(token);
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void verifyEmail_Failure() {
-        String token = "invalid-token";
-        String expectedMessage = "Invalid or expired token.";
+    void testVerifyEmail() {
+        String mockToken = "mockToken123";
+        String expectedMessage = "Email verification successful!";
 
-        when(verificationService.verifyEmail(token)).thenReturn(expectedMessage);
+        when(verificationService.verifyToken(eq(mockToken), eq(VerificationType.EMAIL_VERIFICATION)))
+                .thenReturn(expectedMessage);
 
-        ResponseEntity<String> response = verificationController.verifyEmail(token);
+        ResponseEntity<String> response = verificationController.verifyEmail(mockToken);
 
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(expectedMessage, response.getBody());
-
-        verify(verificationService, times(1)).verifyEmail(token);
     }
 }

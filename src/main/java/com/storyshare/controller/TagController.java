@@ -30,7 +30,7 @@ public class TagController {
     }
 
     @GetMapping
-    private List<TagResponse> getTags(Pageable pageable,
+    public List<TagResponse> getTags(Pageable pageable,
                                       TagCriteriaRequest criteriaRequest) {
         return tagService.getAllTags(pageable, criteriaRequest);
     }

@@ -23,5 +23,4 @@ public class UserUpdateRequest {
     @Pattern(regexp = "^[A-Za-zƏəÖöÜüŞşÇçığ]+$", message = "Surname must contain only Azerbaijani letters")
     @NotBlank(message = "Surname cannot be blank")
     private String surname;
-
 }

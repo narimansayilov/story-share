@@ -3,6 +3,7 @@ package com.storyshare.controller;
 import com.storyshare.dto.criteria.CityCriteriaRequest;
 import com.storyshare.dto.request.CityRequest;
 import com.storyshare.dto.response.CityResponse;
+import com.storyshare.entity.Translation;
 import com.storyshare.service.CityService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,10 +19,12 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 
 class CityControllerTest {
+
     @Mock
-    CityService cityService;
+    private CityService cityService;
+
     @InjectMocks
-    CityController cityController;
+    private CityController cityController;
 
     @BeforeEach
     void setUp() {
@@ -30,39 +33,88 @@ class CityControllerTest {
 
     @Test
     void testAddCity() {
-        cityController.addCity(new CityRequest());
+        CityRequest mockCityRequest = new CityRequest();
+        mockCityRequest.setName("Sample City");
+        mockCityRequest.setParentCity(false);
+        mockCityRequest.setParentId(UUID.randomUUID());
+        mockCityRequest.setTranslations(List.of(new Translation("en", "Sample City")));
+
+        cityController.addCity(mockCityRequest);
+
         verify(cityService).addCity(any(CityRequest.class));
     }
 
     @Test
     void testGetCity() {
-        when(cityService.getCity(any(UUID.class))).thenReturn(new CityResponse());
+        UUID cityId = UUID.randomUUID();
+        CityResponse mockCityResponse = new CityResponse();
+        mockCityResponse.setId(cityId);
+        mockCityResponse.setName("Sample City");
+        mockCityResponse.setParentCity(false);
+        mockCityResponse.setStoryCount(5);
+        mockCityResponse.setTranslations(List.of(new Translation("en", "Sample City")));
 
-        CityResponse result = cityController.getCity(new UUID(0L, 0L));
-        Assertions.assertEquals(new CityResponse(), result);
+        when(cityService.getCity(any(UUID.class))).thenReturn(mockCityResponse);
+
+        CityResponse result = cityController.getCity(cityId);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(mockCityResponse, result);
+        Assertions.assertEquals(cityId, result.getId());
+        Assertions.assertEquals("Sample City", result.getName());
     }
 
     @Test
     void testGetAllCities() {
-        when(cityService.getAllCities(any(Pageable.class), any(CityCriteriaRequest.class))).thenReturn(List.of(new CityResponse()));
+        CityResponse mockCityResponse = new CityResponse();
+        mockCityResponse.setId(UUID.randomUUID());
+        mockCityResponse.setName("Sample City");
+        mockCityResponse.setParentCity(false);
+        mockCityResponse.setStoryCount(5);
+        mockCityResponse.setTranslations(List.of(new Translation("en", "Sample City")));
 
-        List<CityResponse> result = cityController.getAllCities(null, new CityCriteriaRequest());
-        Assertions.assertEquals(List.of(new CityResponse()), result);
+        when(cityService.getAllCities(any(Pageable.class), any(CityCriteriaRequest.class)))
+                .thenReturn(List.of(mockCityResponse));
+
+        List<CityResponse> result = cityController.getAllCities(Pageable.unpaged(), new CityCriteriaRequest());
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertEquals(mockCityResponse, result.get(0));
     }
 
     @Test
     void testUpdateCity() {
-        when(cityService.updateCity(any(UUID.class), any(CityRequest.class))).thenReturn(new CityResponse());
+        UUID cityId = UUID.randomUUID();
+        CityRequest mockCityRequest = new CityRequest();
+        mockCityRequest.setName("Updated City");
+        mockCityRequest.setParentCity(true);
+        mockCityRequest.setParentId(UUID.randomUUID());
+        mockCityRequest.setTranslations(List.of(new Translation("en", "Updated City")));
 
-        CityResponse result = cityController.updateCity(new UUID(0L, 0L), new CityRequest());
-        Assertions.assertEquals(new CityResponse(), result);
+        CityResponse mockCityResponse = new CityResponse();
+        mockCityResponse.setId(cityId);
+        mockCityResponse.setName("Updated City");
+        mockCityResponse.setParentCity(true);
+        mockCityResponse.setStoryCount(10);
+        mockCityResponse.setTranslations(List.of(new Translation("en", "Updated City")));
+
+        when(cityService.updateCity(any(UUID.class), any(CityRequest.class))).thenReturn(mockCityResponse);
+
+        CityResponse result = cityController.updateCity(cityId, mockCityRequest);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(mockCityResponse, result);
+        Assertions.assertEquals(cityId, result.getId());
+        Assertions.assertEquals("Updated City", result.getName());
     }
 
     @Test
     void testDeleteCity() {
-        cityController.deleteCity(new UUID(0L, 0L));
+        UUID cityId = UUID.randomUUID();
+
+        cityController.deleteCity(cityId);
+
         verify(cityService).deleteCity(any(UUID.class));
     }
 }
-
-//Generated with love by TestMe :) Please raise issues & feature requests at: https://weirddev.com/forum#!/testme

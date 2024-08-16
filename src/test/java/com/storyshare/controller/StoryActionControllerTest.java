@@ -4,6 +4,7 @@ import com.storyshare.dto.response.StoryActionResponse;
 import com.storyshare.enums.StoryActionType;
 import com.storyshare.service.StoryActionService;
 import com.storyshare.dto.response.StoryResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -26,39 +27,57 @@ class StoryActionControllerTest {
     @Mock
     private StoryActionService storyActionService;
 
-    public StoryActionControllerTest() {
+    private StoryActionResponse storyActionResponse;
+    private UUID storyId;
+    private UUID storyActionId;
+    private String actionType;
+
+    @BeforeEach
+    void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        storyId = UUID.randomUUID();
+        storyActionId = UUID.randomUUID();
+        actionType = "LIKE";
+
+        storyActionResponse = new StoryActionResponse();
+        storyActionResponse.setId(storyActionId);
+        storyActionResponse.setType(StoryActionType.valueOf(actionType));
+        storyActionResponse.setCreatedAt(LocalDateTime.now());
+
+        StoryResponse storyResponse = new StoryResponse();
+        storyResponse.setId(storyId);
+        storyResponse.setTitle("Sample Story Title");
+        storyResponse.setDescription("Sample description");
+        storyResponse.setViewCount(100);
+        storyResponse.setLikeCount(10);
+        storyResponse.setDislikeCount(2);
+        storyResponse.setCommentCount(5);
+        storyResponse.setFavoriteCount(15);
+
+        storyActionResponse.setStory(storyResponse);
     }
 
     @Test
     void testGetStoryActionByType() {
-        String type = "LIKE";
-        StoryActionResponse response = new StoryActionResponse();
-        response.setType(StoryActionType.valueOf(type));
-        response.setStory(new StoryResponse());
-        response.setCreatedAt(LocalDateTime.now());
-        response.setId(UUID.randomUUID());
+        when(storyActionService.getStoryActionByType(anyString())).thenReturn(List.of(storyActionResponse));
 
-        when(storyActionService.getStoryActionByType(type)).thenReturn(List.of(response));
-
-        ResponseEntity<List<StoryActionResponse>> responseEntity = storyActionController.getStoryActionByType(type);
+        ResponseEntity<List<StoryActionResponse>> responseEntity = storyActionController.getStoryActionByType(actionType);
 
         assertEquals(200, responseEntity.getStatusCodeValue());
+        assertNotNull(responseEntity.getBody());
         assertEquals(1, responseEntity.getBody().size());
         StoryActionResponse actualResponse = responseEntity.getBody().get(0);
-        assertEquals(type, actualResponse.getType().name());
-        assertNotNull(actualResponse.getStory()); // Assuming StoryResponse has a non-null field
+        assertEquals(actionType, actualResponse.getType().name());
+        assertNotNull(actualResponse.getStory());
+        assertNotNull(actualResponse.getCreatedAt());
     }
 
     @Test
     void testCreateStoryByType() {
-        UUID storyId = UUID.randomUUID();
-        String type = "LIKE";
-        UUID storyActionId = UUID.randomUUID();
+        when(storyActionService.createStoryByType(any(UUID.class), anyString())).thenReturn(storyActionId);
 
-        when(storyActionService.createStoryByType(storyId, type)).thenReturn(storyActionId);
-
-        ResponseEntity<UUID> responseEntity = storyActionController.createStoryByType(storyId, type);
+        ResponseEntity<UUID> responseEntity = storyActionController.createStoryByType(storyId, actionType);
 
         assertEquals(200, responseEntity.getStatusCodeValue());
         assertEquals(storyActionId, responseEntity.getBody());
@@ -66,9 +85,7 @@ class StoryActionControllerTest {
 
     @Test
     void testDeleteStoryAction() {
-        UUID storyActionId = UUID.randomUUID();
-
-        doNothing().when(storyActionService).deleteStoryActionById(storyActionId);
+        doNothing().when(storyActionService).deleteStoryActionById(any(UUID.class));
 
         ResponseEntity<String> responseEntity = storyActionController.deleteStoryAction(storyActionId);
 
