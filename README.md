@@ -30,5 +30,5 @@ Admin istifadəçiləri platformada rolları və icazələri idarə etmək imkan
 ### İstifadə olunan texnologiyalar:
 
 * Backend: Java, Spring Boot (MVC, Təhlükəsizlik, Data JPA)
-* Verilənlər bazası: [Belə edin, məsələn, PostgreSQL, MySQL]
+* Verilənlər bazası: PostgreSQL
 * Təhlükəsizlik: JWT əsaslı autentifikasiya və rolun idarə edilməsi
