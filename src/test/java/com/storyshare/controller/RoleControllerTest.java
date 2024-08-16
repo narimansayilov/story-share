@@ -16,10 +16,12 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 
 class RoleControllerTest {
+
     @Mock
-    RoleService roleService;
+    private RoleService roleService;
+
     @InjectMocks
-    RoleController roleController;
+    private RoleController roleController;
 
     @BeforeEach
     void setUp() {
@@ -28,37 +30,72 @@ class RoleControllerTest {
 
     @Test
     void testAddRole() {
-        roleController.addRole(new RoleRequest());
+        RoleRequest mockRoleRequest = new RoleRequest();
+        mockRoleRequest.setName("Admin");
+
+        roleController.addRole(mockRoleRequest);
+
         verify(roleService).addRole(any(RoleRequest.class));
     }
 
     @Test
     void testGetRole() {
-        when(roleService.getRole(any(UUID.class))).thenReturn(new RoleResponse());
+        UUID roleId = UUID.randomUUID();
+        RoleResponse mockRoleResponse = new RoleResponse();
+        mockRoleResponse.setId(roleId);
+        mockRoleResponse.setName("Admin");
 
-        RoleResponse result = roleController.getRole(new UUID(0L, 0L));
-        Assertions.assertEquals(new RoleResponse(), result);
+        when(roleService.getRole(any(UUID.class))).thenReturn(mockRoleResponse);
+
+        RoleResponse result = roleController.getRole(roleId);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(mockRoleResponse, result);
+        Assertions.assertEquals(roleId, result.getId());
+        Assertions.assertEquals("Admin", result.getName());
     }
 
     @Test
     void testGetAllRoles() {
-        when(roleService.getAllRoles()).thenReturn(List.of(new RoleResponse()));
+        RoleResponse mockRoleResponse = new RoleResponse();
+        mockRoleResponse.setId(UUID.randomUUID());
+        mockRoleResponse.setName("User");
+
+        when(roleService.getAllRoles()).thenReturn(List.of(mockRoleResponse));
 
         List<RoleResponse> result = roleController.getAllRoles();
-        Assertions.assertEquals(List.of(new RoleResponse()), result);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertEquals(mockRoleResponse, result.get(0));
     }
 
     @Test
     void testUpdateRole() {
-        when(roleService.updateRole(any(UUID.class), any(RoleRequest.class))).thenReturn(new RoleResponse());
+        UUID roleId = UUID.randomUUID();
+        RoleRequest mockRoleRequest = new RoleRequest();
+        mockRoleRequest.setName("Manager");
 
-        RoleResponse result = roleController.updateRole(new UUID(0L, 0L), new RoleRequest());
-        Assertions.assertEquals(new RoleResponse(), result);
+        RoleResponse mockRoleResponse = new RoleResponse();
+        mockRoleResponse.setId(roleId);
+        mockRoleResponse.setName("Manager");
+
+        when(roleService.updateRole(any(UUID.class), any(RoleRequest.class))).thenReturn(mockRoleResponse);
+
+        RoleResponse result = roleController.updateRole(roleId, mockRoleRequest);
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(mockRoleResponse, result);
+        Assertions.assertEquals(roleId, result.getId());
+        Assertions.assertEquals("Manager", result.getName());
     }
 
     @Test
     void testDeleteRole() {
-        roleController.deleteRole(new UUID(0L, 0L));
+        UUID roleId = UUID.randomUUID();
+
+        roleController.deleteRole(roleId);
+
         verify(roleService).deleteRole(any(UUID.class));
     }
 }

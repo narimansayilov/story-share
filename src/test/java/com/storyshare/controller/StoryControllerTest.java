@@ -2,7 +2,8 @@ package com.storyshare.controller;
 
 import com.storyshare.dto.criteria.StoryCriteriaRequest;
 import com.storyshare.dto.request.StoryRequest;
-import com.storyshare.dto.response.StoryResponse;
+import com.storyshare.dto.response.*;
+import com.storyshare.entity.Translation;
 import com.storyshare.service.StoryService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,11 +21,12 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 
 class StoryControllerTest {
+
     @Mock
-    StoryService storyService;
+    private StoryService storyService;
 
     @InjectMocks
-    StoryController storyController;
+    private StoryController storyController;
 
     private UUID storyId;
     private StoryRequest storyRequest;
@@ -36,12 +38,62 @@ class StoryControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
         storyId = UUID.randomUUID();
-        storyRequest = new StoryRequest(); // initialize with necessary fields
-        storyResponse = new StoryResponse(); // initialize with necessary fields
-        images = List.of(mock(MultipartFile.class)); // mock MultipartFile
+
+        storyRequest = new StoryRequest();
+        storyRequest.setTitle("Sample Story Title");
+        storyRequest.setDescription("Sample story description for testing.");
+        storyRequest.setCityId(UUID.randomUUID());
+        storyRequest.setTagIds(List.of(UUID.randomUUID(), UUID.randomUUID()));
+
+        storyResponse = new StoryResponse();
+        storyResponse.setId(storyId);
+        storyResponse.setTitle("Sample Story Title");
+        storyResponse.setDescription("Sample story description for testing.");
+        storyResponse.setViewCount(100);
+        storyResponse.setLikeCount(10);
+        storyResponse.setDislikeCount(2);
+        storyResponse.setCommentCount(5);
+        storyResponse.setFavoriteCount(15);
+
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(UUID.randomUUID());
+        userResponse.setUsername("testuser");
+        userResponse.setName("John");
+        userResponse.setSurname("Doe");
+        userResponse.setEmail("john.doe@example.com");
+        userResponse.setStoryCount(1);
+        userResponse.setPhotoUrl("http://example.com/photo.jpg");
+
+        storyResponse.setUser(userResponse);
+
+        CityResponse cityResponse = new CityResponse();
+        cityResponse.setId(UUID.randomUUID());
+        cityResponse.setName("Sample City");
+        cityResponse.setParentCity(false);
+        cityResponse.setStoryCount(20);
+        cityResponse.setParentId(null);
+        storyResponse.setCity(cityResponse);
+
+        TagResponse tagResponse = new TagResponse();
+        tagResponse.setId(UUID.randomUUID());
+        tagResponse.setName("Sample Tag");
+        tagResponse.setStoryCount(10);
+        tagResponse.setTranslations(List.of(new Translation("en", "Sample Tag")));
+
+        storyResponse.setTags(List.of(tagResponse));
+
+        StoryImageResponse storyImageResponse = new StoryImageResponse();
+        storyImageResponse.setId(UUID.randomUUID());
+        storyImageResponse.setUrl("http://example.com/image.jpg");
+        storyImageResponse.setIsMain(true);
+
+        storyResponse.setImages(List.of(storyImageResponse));
+
+        images = List.of(mock(MultipartFile.class));
         pageable = PageRequest.of(0, 10);
-        criteriaRequest = new StoryCriteriaRequest(); // initialize with necessary fields
+        criteriaRequest = new StoryCriteriaRequest();
     }
 
     @Test
