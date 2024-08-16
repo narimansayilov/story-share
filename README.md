@@ -31,5 +31,4 @@ Admin istifadəçiləri platformada rolları və icazələri idarə etmək imkan
 
 * Backend: Java, Spring Boot (MVC, Təhlükəsizlik, Data JPA)
 * Verilənlər bazası: [Belə edin, məsələn, PostgreSQL, MySQL]
-* Təhlükəsizlik: JWT əsaslı autentifikasiya və rolun idarə edilməsi.
-* Yerləşdirmə: [Mövcud olduğunu göstərin, məsələn, Docker, Kubernetes, AWS]
+* Təhlükəsizlik: JWT əsaslı autentifikasiya və rolun idarə edilməsi
