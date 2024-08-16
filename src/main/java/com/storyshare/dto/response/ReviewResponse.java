@@ -1,10 +1,5 @@
 package com.storyshare.dto.response;
 
-import com.storyshare.entity.ReviewEntity;
-import com.storyshare.entity.StoryEntity;
-import com.storyshare.entity.UserEntity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
