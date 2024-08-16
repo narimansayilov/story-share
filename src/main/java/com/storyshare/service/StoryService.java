@@ -27,6 +27,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -68,7 +69,7 @@ public class StoryService {
     public List<StoryResponse> getAllStories(Pageable pageable, StoryCriteriaRequest criteriaRequest) {
         Specification<StoryEntity> specification = StorySpecification.getStoryByCriteria(criteriaRequest);
         Page<StoryEntity> entities = storyRepository.findAll(specification, pageable);
-        return StoryMapper.INSTANCE.entitiesToResponses(entities);
+        return getStoriesWithImages(entities);
     }
 
     public List<StoryResponse> getMyStories(Pageable pageable, StoryCriteriaRequest criteriaRequest) {
@@ -76,7 +77,7 @@ public class StoryService {
                 new NotFoundException("USER_NOT_FOUND"));
         Specification<StoryEntity> specification = StorySpecification.getMyStoryByCriteria(criteriaRequest, user.getId());
         Page<StoryEntity> entities = storyRepository.findAll(specification, pageable);
-        return StoryMapper.INSTANCE.entitiesToResponses(entities);
+        return getStoriesWithImages(entities);
     }
 
     @Transactional
@@ -89,7 +90,8 @@ public class StoryService {
         if(!entity.getStatus()){
             throw new NotActiveException("STORY_NOT_ACTIVE");
         }
-        StoryMapper.INSTANCE.mapRequestToEntity(entity, request);
+        List<TagEntity> tags = tagRepository.findAllById(request.getTagIds());
+        StoryMapper.INSTANCE.mapRequestToEntity(entity, request, tags);
         storyRepository.save(entity);
         imageService.editImages(images, id);
         List<StoryImageResponse> imageResponses = storyImageService.getImages(id);
@@ -120,6 +122,16 @@ public class StoryService {
         }
         entity.setStatus(false);
         storyRepository.save(entity);
+    }
+
+    public List<StoryResponse> getStoriesWithImages(Page<StoryEntity> entities){
+        List<StoryResponse> responses = new ArrayList<>();
+        for(StoryEntity story : entities) {
+            List<StoryImageResponse> images = storyImageService.getImages(story.getId());
+            StoryResponse response = StoryMapper.INSTANCE.entityToResponse(story, images);
+            responses.add(response);
+        }
+        return responses;
     }
 
     private void setCount(UserEntity user, UUID cityId, List<UUID> tagIds){

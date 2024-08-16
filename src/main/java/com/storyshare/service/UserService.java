@@ -86,6 +86,7 @@ public class UserService {
         RoleEntity role = roleRepository.findById(roleId).orElseThrow(() ->
                 new NotFoundException("ROLE_NOT_FOUND"));
         user.setRoles(List.of(role));
+        userRepository.save(user);
     }
 
     public String getCurrentUsername(){

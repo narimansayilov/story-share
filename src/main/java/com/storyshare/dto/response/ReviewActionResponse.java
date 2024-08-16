@@ -1,9 +1,6 @@
 package com.storyshare.dto.response;
 
-import com.storyshare.entity.ReviewEntity;
-import com.storyshare.entity.UserEntity;
 import com.storyshare.enums.ReviewActionType;
-import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,10 +13,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReviewActionResponse {
     UUID id;
-
     ReviewActionType type;
-
     UUID reviewId;
-
     UUID userId;
 }
